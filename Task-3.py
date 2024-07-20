@@ -15,14 +15,7 @@ transform = transforms.Compose([
 ])
 
 def preprocess_image(image_path):
-    """
-    Load an image and apply transformations.
-    Args:
-    - image_path (str): Path to the image file.
-    
-    Returns:
-    - torch.Tensor: Transformed image tensor.
-    """
+   
     image = Image.open(image_path).convert('RGB')
     image = transform(image).unsqueeze(0)  # type: ignore 
     return image
@@ -33,14 +26,7 @@ model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-cap
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
 def generate_caption(image_tensor):
-    """
-    Generate a caption for the given image tensor.
-    Args:
-    - image_tensor (torch.Tensor): Preprocessed image tensor.
-    
-    Returns:
-    - str: Generated caption.
-    """
+   
     output_ids = model.generate(image_tensor, max_length=16, num_beams=4)  # type: ignore 
     attention_mask = torch.ones_like(output_ids)  # type: ignore 
     caption = tokenizer.decode(output_ids[0], skip_special_tokens=True)  
@@ -48,14 +34,7 @@ def generate_caption(image_tensor):
 
 
 def image_captioning(image_path):
-    """
-    Preprocess the image and generate a caption.
-    Args:
-    - image_path (str): Path to the image file.
-    
-    Returns:
-    - str: Generated caption.
-    """
+   
     image_tensor = preprocess_image(image_path)
     caption = generate_caption(image_tensor)
     return caption
